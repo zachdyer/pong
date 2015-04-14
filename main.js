@@ -247,14 +247,16 @@ bar.draw = function(){
 };
 var sound = new Object();
 sound.music = document.createElement("audio");
-sound.music.src = "http://66.90.118.45:777/ost/acid-tetris-original-game-rip/paivbseura/02-tearing-up-spacetime.mp3";
+sound.music.src = "sound/tearing-up-spacetime.mp3";
 sound.music.play();
+sound.music.loop = true;
 sound.rayGun = document.createElement("audio");
-sound.rayGun.src = "rayGun.mp3";
+sound.rayGun.src = "sound/rayGun.mp3";
+sound.rayGun.volume = 0.75
 sound.bounce = document.createElement("audio");
-sound.bounce.src = "bounce.mp3";
+sound.bounce.src = "sound/bounce.mp3";
 sound.explosion = document.createElement("audio");
-sound.explosion.src = "explosion.mp3";
+sound.explosion.src = "sound/explosion.mp3";
 sound.muted = false;
 sound.mute = function(){
 	if(sound.muted === false){
@@ -278,9 +280,9 @@ sound.drawMute = function(){
 
 var image = new Object();
 image.foreverAlone = new Image();
-image.foreverAlone.src = "foreverAlone.gif";
+image.foreverAlone.src = "images/foreverAlone.gif";
 image.foreverAloneGameOver = new Image();
-image.foreverAloneGameOver.src = "foreverAloneGameOver.gif";
+image.foreverAloneGameOver.src = "images/foreverAloneGameOver.gif";
 image.images = [
 	image.foreverAlone,
 	image.foreverAloneGameOver	
