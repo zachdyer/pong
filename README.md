@@ -4,5 +4,10 @@ This is an HTML5 game that is like pong except single player. The longer you bou
 ## Instructions
 Press any button to start. Press the left mouse button to launch the ball. Move the mouse left or right to bounce the ball back to the walls.
 
+## Other details
+- Author: Zach Dyer
+- Website: ZachDyerDesign.com
+- Version: 0.1.1
+
 ## Demo game
 http://dev.zachdyerdesign.com/dev/pong/
