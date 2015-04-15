@@ -1,3 +1,6 @@
+var version = "0.1.2";
+//Update the title to current version
+document.title = "Pong - Forever Alone Edition - Version " + version;
 //Things that are related to the screen
 var canvas = document.getElementById("canvas");
 var context = canvas.getContext("2d");
@@ -30,8 +33,8 @@ var screenDraw = function(){
 	} else if(game.over) {
 		game.overScreen();
 		game.drawScore();
-		
 	}
+	game.drawVersion();
 	if(image.loaded){
 		sound.drawMute();
 		game.drawMode();
@@ -307,12 +310,17 @@ image.load = function(){
 var game = new Object();
 game.score = 0;
 game.highScore = 0;
-game.drawScore = function(){
+game.drawScore = function() {
 	var ctx = context;
 	ctx.font = "10pt Arial";
 	ctx.textAlign = "left";
 	ctx.fillText("Score: " + game.score, 20, 50);
 	ctx.fillText("High Score: " + game.highScore, 20, 70);
+};
+game.drawVersion = function() {
+	var ctx = context;
+	ctx.textAlign = "right";
+	ctx.fillText("Version: " + version, screenWidth - 20, screenHeight - 50);
 };
 game.load = function(){
 	screenAdjust();
@@ -425,7 +433,7 @@ game.drawMode = function(){
 
 //Library
 var log = function(message){
-	window.console.log(message);
+	console.log(message);
 };
 var color = new Object();
 color.select = function(color){
@@ -454,4 +462,4 @@ window.onkeydown = game.keyboard;
 
 game.load();
 
-window.setInterval(game.loop, 1000 / 59);
+window.setInterval(game.loop, 17);
