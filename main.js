@@ -1,3 +1,4 @@
+var version = "0.2.1";
 //Update the title to current version
 document.title = "Pong - Forever Alone Edition - Version " + version;
 //Things that are related to the screen
