@@ -2,6 +2,12 @@ var version = "0.2.1";
 //Update the title to current version
 document.title = "Pong - Forever Alone Edition - Version " + version;
 //Things that are related to the screen
+
+//Using game library object
+var game = new Game('canvas');
+
+tick();
+
 var canvas = document.getElementById("canvas");
 var context = canvas.getContext("2d");
 var screenWidth = window.innerWidth;
@@ -23,18 +29,18 @@ screenClear = function(){
 var screenDraw = function(){
 	if(image.loaded === false){
 		screenLoading();
-	} else if(game.title && image.loaded){
-		game.titleScreen();
-		game.drawScore();
-	} else if(game.play) {
+	} else if(title && image.loaded){
+		titleScreen();
+		drawScore();
+	} else if(play) {
 		bar.draw();
 		ball.draw();
-		game.drawScore();
-	} else if(game.over) {
-		game.overScreen();
-		game.drawScore();
+		drawScore();
+	} else if(over) {
+		overScreen();
+		drawScore();
 	}
-	game.drawVersion();
+	drawVersion();
 	if(image.loaded){
 		sound.drawMute();
 		game.drawMode();
@@ -70,24 +76,24 @@ ball.launch = function(){
 ball.update = function(){
 	if(ball.launched){
 		if(ball.hitBottomSide()){
-			game.play = false;
-			game.over = true;
+			play = false;
+			over = true;
 		}
 		if(ball.hitRightSide()){
 			ball.speedX = -ball.speed;
-			game.score++;
+			score++;
 		}
 		if(ball.hitTopSide()){
 			ball.speedY = ball.speed;
-			game.score++;
+			score++;
 		}
 		if(ball.hitLeftSide()){
 			ball.speedX = ball.speed;
-			game.score++;
+			score++;
 		}
 		if(ball.hitBar()){
 			ball.speedY = -ball.speed;
-			game.score++;
+			score++;
 		}
 		ball.x += ball.speedX;
 		ball.y += ball.speedY;
@@ -164,7 +170,7 @@ ball.particle = function(x,y,r,g,b){
 ball.particleAmount = 20;
 ball.hitBottomSide = function(){
 	if(ball.y > screenHeight- ball.size){
-		if(game.siezureMode)
+		if(siezureMode)
 			screenFlash();
 		if(sound.muted === false)
 			sound.explosion.play();
@@ -176,7 +182,7 @@ ball.hitBottomSide = function(){
 ball.hitRightSide = function(){
 	if(ball.x > screenWidth - ball.size){
 		ball.speed += ball.speedIncrementer;
-		if(game.siezureMode)
+		if(siezureMode)
 			screenFlash();
 		if(sound.muted === false){
 			sound.bounce.load();
@@ -190,7 +196,7 @@ ball.hitRightSide = function(){
 ball.hitTopSide = function(){
 	if(ball.y < 0 + ball.size){
 		ball.speed += ball.speedIncrementer;
-		if(game.siezureMode)
+		if(siezureMode)
 			screenFlash();
 		if(sound.muted === false){
 			sound.bounce.load();
@@ -204,7 +210,7 @@ ball.hitTopSide = function(){
 ball.hitLeftSide = function(){
 	if(ball.x < 0 + ball.size){
 		ball.speed += ball.speedIncrementer;
-		if(game.siezureMode)
+		if(siezureMode)
 			screenFlash();
 		if(sound.muted === false){
 			sound.bounce.load();
@@ -218,7 +224,7 @@ ball.hitLeftSide = function(){
 ball.hitBar = function(){
 	if(ball.x > bar.x && ball.x < bar.x + bar.width && ball.y > bar.y - ball.size && ball.y < bar.y + bar.height){
 		ball.speed += ball.speedIncrementer;
-		if(game.siezureMode)
+		if(siezureMode)
 			screenFlash();
 		if(sound.muted === false){
 			sound.bounce.load();
@@ -307,72 +313,71 @@ image.load = function(){
 	}
 };
 
-var game = new Object();
-game.score = 0;
-game.highScore = 0;
-game.drawScore = function() {
+var score = 0;
+var highScore = 0;
+var drawScore = function() {
 	var ctx = context;
 	ctx.font = "10pt Arial";
 	ctx.textAlign = "left";
-	ctx.fillText("Score: " + game.score, 20, 50);
-	ctx.fillText("High Score: " + game.highScore, 20, 70);
+	ctx.fillText("Score: " + score, 20, 50);
+	ctx.fillText("High Score: " + highScore, 20, 70);
 };
-game.drawVersion = function() {
+var drawVersion = function() {
 	var ctx = context;
 	ctx.textAlign = "right";
 	ctx.fillText("Version: " + version, screenWidth - 20, screenHeight - 50);
 };
-game.load = function(){
+var load = function() {
 	screenAdjust();
 	image.load();
 };
-game.update = function(){
-	if(game.play){
+var update = function(){
+	if(play){
 		ball.update();
 	}
 };
-game.click = function(){
-	if(game.title){
-		game.title = false;
-		game.play = true;
-	} else if(game.play){
+var click = function(){
+	if(title){
+		title = false;
+		play = true;
+	} else if(play){
 		if(ball.launched === false){
 			if(sound.muted === false)
 				sound.rayGun.play();
 			ball.launch();
 		}
-	} else if(game.over){
-		game.title = true;
-		game.over = false;
+	} else if(over){
+		title = true;
+		over = false;
 		game.reset();
 	}
 };
-game.keyboard = function(evt){
+var keyboard = function(evt){
 	log(evt.keyCode);
 	switch(evt.keyCode){
 		case 77:
 			sound.mute();
 			break;
 		case 83:
-			if(game.siezureMode){
-				game.siezureMode = false;
+			if(siezureMode){
+				siezureMode = false;
 			} else {
-				game.siezureMode = true;
+				siezureMode = true;
 			}
 			break;
 	}
 };
-game.loop = function(){
+var tick = function(){
 	screenClear();
 	screenDraw();
-	game.update();
+	update();
 };
-game.title = true;
-game.play = false;
-game.over = false;
-game.siezureMode = true;
-game.titleBlinker = 0;
-game.titleScreen = function(){
+var title = true;
+var play = false;
+var over = false;
+var siezureMode = true;
+var titleBlinker = 0;
+var titleScreen = function(){
 	var ctx = context;
 	//Draw Image of Forever Alone
 	ctx.drawImage(image.foreverAlone,0,screenHeight- image.foreverAlone.height);
@@ -384,15 +389,15 @@ game.titleScreen = function(){
 	ctx.fillText("Forever Alone Edition",screenWidth / 2, screenHeight/ 2);
 	ctx.font = "15pt Arial";
 	ctx.fillText("Beta",screenWidth / 2, screenHeight/ 2 + 50);
-	game.titleBlinker++;
-	if(game.titleBlinker < 30){
+	titleBlinker++;
+	if(titleBlinker < 30){
 		ctx.fillText("Click to Start!",screenWidth / 2, screenHeight/ 2 + 100);
-	} else if(game.titleBlinker > 60){
-		game.titleBlinker = 0;
+	} else if(titleBlinker > 60){
+		titleBlinker = 0;
 	};
 	
 };
-game.overScreen = function(){
+var overScreen = function(){
 	var ctx = context;
 	//Draw Image of Forever Alone
 	ctx.drawImage(image.foreverAloneGameOver,0,screenHeight- image.foreverAloneGameOver.height);
@@ -402,29 +407,29 @@ game.overScreen = function(){
 	color.select(color.white);//Fixes a bug when you adjust the window the message disappears.
 	ctx.fillText(message, screenWidth / 2, screenHeight/ 2);
 	ctx.font = "15pt Arial";
-	game.titleBlinker++;
-	if(game.titleBlinker < 30){
+	titleBlinker++;
+	if(titleBlinker < 30){
 		ctx.fillText("Click to continue...", screenWidth / 2, screenHeight/ 2 + 100);
-	} else if(game.titleBlinker > 60){
-		game.titleBlinker = 0;
+	} else if(titleBlinker > 60){
+		titleBlinker = 0;
 	}
 };
-game.reset = function(){
-	if(game.score > game.highScore){
-		game.highScore = game.score;
+var reset = function(){
+	if(score > highScore){
+		highScore = score;
 		if(sound.muted === false){
 			sound.rayGun.play();
 		}
 		alert("Congratulations! New high score!");
 	}
 	ball.particles = [];
-	game.score = 0;
+	score = 0;
 	ball.reset();
 };
 game.drawMode = function(){
 	var ctx = context;
 	ctx.fillSyle = color.white;
-	if(game.siezureMode){
+	if(siezureMode){
 		ctx.fillText("S - Siezure Mode On", screenWidth - 20, 70);
 	} else {
 	 	ctx.fillText("S - Siezure Mode Off", screenWidth - 20, 70);
@@ -457,9 +462,9 @@ draw.circle = function(centerX,centerY,radius){
 //Listeners
 window.onresize = screenAdjust;
 window.onmousemove = bar.move;
-window.onclick = game.click;
-window.onkeydown = game.keyboard;
+window.onclick = click;
+window.onkeydown = keyboard;
 
-game.load();
+load();
 
-window.setInterval(game.loop, 17);
+window.setInterval(tick, 17);
