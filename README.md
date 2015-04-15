@@ -7,7 +7,7 @@ Press any button to start. Press the left mouse button to launch the ball. Move 
 ## Other details
 - Author: Zach Dyer
 - Website: ZachDyerDesign.com
-- Version: 0.1.1
+- Version: 0.2.1
 
 ## Demo game
-http://dev.zachdyerdesign.com/dev/pong/
+http://zachdyer.github.io/pong/
