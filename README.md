@@ -6,6 +6,7 @@ Press any button to start. Press the left mouse button to launch the ball. Move 
 
 ## Other details
 - Author: Zach Dyer
+- Contributors: unknwnc
 - Website: ZachDyerDesign.com
 - Version: 1.0.0
 
