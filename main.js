@@ -1,4 +1,4 @@
-var version = "0.2.1";
+var version = "1.0.0";
 //Update the title to current version
 document.title = "Pong - Forever Alone Edition - Version " + version;
 //Things that are related to the screen
@@ -6,26 +6,6 @@ document.title = "Pong - Forever Alone Edition - Version " + version;
 //Using game library object
 var game = new Game('canvas');
 
-tick();
-
-var canvas = document.getElementById("canvas");
-var context = canvas.getContext("2d");
-var screenWidth = window.innerWidth;
-var screenHeight= window.innerHeight;
-canvas.width = window.innerWidth;
-canvas.height =  window.innerHeight;
-var screenAdjust = function() {
-	screenWidth = window.innerWidth;
-	console.log("screenWidth: " + screenWidth);
-	console.log("window.innerWidth: " + window.innerWidth);
-	screenHeight= window.innerHeight;
-	canvas.width = window.innerWidth;
-	canvas.height = window.innerHeight;
-	
-};
-screenClear = function(){
-	context.clearRect(0,0,screenWidth,screen.height);
-};
 var screenDraw = function(){
 	if(image.loaded === false){
 		screenLoading();
@@ -43,27 +23,27 @@ var screenDraw = function(){
 	drawVersion();
 	if(image.loaded){
 		sound.drawMute();
-		game.drawMode();
+		drawMode();
 	}
 };
 var screenFlash = function(){
 	color.select(color.white);
-	var ctx = context;
-	ctx.fillRect(0,0,screenWidth,screen.height);
+	var ctx = game.context;
+	ctx.fillRect(0,0,game.screen.width,screen.height);
 };
 var screenLoading = function(){
-	var ctx = context;
+	var ctx = game.context;
 	color.select(color.white);
 	ctx.textAlign = "center";
-	ctx.fillText("Loading...",screenWidth / 2, screenHeight/ 2);
+	ctx.fillText("Loading...",game.screen.width / 2, game.screen.height / 2);
 };
 
 var ball = new Object();
 ball.size = 10;
 ball.speed = 0;
 ball.speedIncrementer = 0.5;
-ball.x = screenWidth / 2;
-ball.y = screenHeight*.67 - ball.size;
+ball.x = game.screen.width / 2;
+ball.y = game.screen.height *.67 - ball.size;
 ball.speedX = ball.speed;
 ball.speedY = ball.speed;
 ball.launched = false;
@@ -99,14 +79,10 @@ ball.update = function(){
 		ball.y += ball.speedY;
 	} else {
 		ball.x = bar.x + bar.width / 2;
-		ball.y = screenHeight*.67 - ball.size;
+		ball.y = game.screen.height *.67 - ball.size;
 	}
 };
 ball.draw = function(){
-
-	//var r = Math.round(Math.random() * 255);
-	//var g = Math.round(Math.random() * 255);
-	//var b = Math.round(Math.random() * 255);
 	var r = color.red;
 	var g = color.green;
 	var b = color.blue;
@@ -137,7 +113,7 @@ ball.draw = function(){
 			break;
 	}
 	ball.trail(r,g,b);
-	context.fillStyle = color.white;
+	game.context.fillStyle = color.white;
 	draw.circle(ball.x,ball.y,ball.size);
 };
 ball.particles = [];
@@ -153,10 +129,8 @@ ball.trail = function(r,g,b){
 	for(var i = ball.particles.length-1; i >= 0; i--){
 		var n = ball.particles.length - i;
 		var opacity = n * opacityFactor + opacityMin;
-		//var size = n * sizeFactor;
-		//var size = n * 1.1;
 		var size = ball.size;
-		context.fillStyle = "rgba(" + ball.particles[i].r + "," + ball.particles[i].g + "," + ball.particles[i].b + "," + opacity + ")";
+		game.context.fillStyle = "rgba(" + ball.particles[i].r + "," + ball.particles[i].g + "," + ball.particles[i].b + "," + opacity + ")";
 		draw.circle(ball.particles[i].x,ball.particles[i].y,size);
 	}
 };
@@ -169,7 +143,7 @@ ball.particle = function(x,y,r,g,b){
 }
 ball.particleAmount = 20;
 ball.hitBottomSide = function(){
-	if(ball.y > screenHeight- ball.size){
+	if(ball.y > game.screen.height - ball.size){
 		if(siezureMode)
 			screenFlash();
 		if(sound.muted === false)
@@ -180,7 +154,7 @@ ball.hitBottomSide = function(){
 	}
 };
 ball.hitRightSide = function(){
-	if(ball.x > screenWidth - ball.size){
+	if(ball.x > game.screen.width - ball.size){
 		ball.speed += ball.speedIncrementer;
 		if(siezureMode)
 			screenFlash();
@@ -237,8 +211,8 @@ ball.hitBar = function(){
 };
 ball.reset = function(){
 	ball.speed = 0;
-	ball.x = screenWidth / 2;
-	ball.y = screenHeight*.67 - ball.size;
+	ball.x = game.screen.width / 2;
+	ball.y = game.screen.height *.67 - ball.size;
 	ball.speedX = ball.speed;
 	ball.speedY = ball.speed;
 	ball.launched = false;
@@ -247,15 +221,15 @@ ball.reset = function(){
 var bar = new Object();
 bar.width = 100;
 bar.height = 30;
-bar.x = screenWidth / 2 - bar.width / 2;
-bar.y = screenHeight* 0.67;
+bar.x = game.screen.width / 2 - bar.width / 2;
+bar.y = game.screen.height * 0.67;
 bar.move = function(event){
 	bar.x = event.clientX;
 };
 bar.draw = function(){
-	var ctx = context;
+	var ctx = game.context;
 	color.select(color.white);
-	bar.y = screenHeight* 0.67;
+	bar.y = game.screen.height * 0.67;
 	ctx.fillRect(bar.x, bar.y, bar.width, 30);
 };
 var sound = new Object();
@@ -281,13 +255,13 @@ sound.mute = function(){
 	}
 };
 sound.drawMute = function(){
-	var ctx = context;
+	var ctx = game.context;
 	ctx.font = "10pt Arial";
 	ctx.textAlign = "right";
 	if(sound.muted){
-		ctx.fillText("M - Muted", screenWidth - 20, 50);
+		ctx.fillText("M - Muted", game.screen.width - 20, 50);
 	} else {
-	 	ctx.fillText("M - Mute", screenWidth - 20, 50);
+	 	ctx.fillText("M - Mute", game.screen.width - 20, 50);
 	}
 };
 
@@ -316,19 +290,18 @@ image.load = function(){
 var score = 0;
 var highScore = 0;
 var drawScore = function() {
-	var ctx = context;
+	var ctx = game.context;
 	ctx.font = "10pt Arial";
 	ctx.textAlign = "left";
 	ctx.fillText("Score: " + score, 20, 50);
 	ctx.fillText("High Score: " + highScore, 20, 70);
 };
 var drawVersion = function() {
-	var ctx = context;
+	var ctx = game.context;
 	ctx.textAlign = "right";
-	ctx.fillText("Version: " + version, screenWidth - 20, screenHeight - 50);
+	ctx.fillText("Version: " + version, game.screen.width - 20, game.screen.height  - 50);
 };
 var load = function() {
-	screenAdjust();
 	image.load();
 };
 var update = function(){
@@ -368,7 +341,6 @@ var keyboard = function(evt){
 	}
 };
 var tick = function(){
-	screenClear();
 	screenDraw();
 	update();
 };
@@ -378,38 +350,38 @@ var over = false;
 var siezureMode = true;
 var titleBlinker = 0;
 var titleScreen = function(){
-	var ctx = context;
+	var ctx = game.context;
 	//Draw Image of Forever Alone
-	ctx.drawImage(image.foreverAlone,0,screenHeight- image.foreverAlone.height);
+	ctx.drawImage(image.foreverAlone,0,game.screen.height - image.foreverAlone.height);
 	ctx.textAlign = "center";
 	color.select(color.white);
 	ctx.font = "80pt Arial";
-	ctx.fillText("PONG",screenWidth / 2, screenHeight/ 2 - 50);
+	ctx.fillText("PONG",game.screen.width / 2, game.screen.height / 2 - 50);
 	ctx.font = "20pt Arial";
-	ctx.fillText("Forever Alone Edition",screenWidth / 2, screenHeight/ 2);
+	ctx.fillText("Forever Alone Edition",game.screen.width / 2, game.screen.height / 2);
 	ctx.font = "15pt Arial";
-	ctx.fillText("Beta",screenWidth / 2, screenHeight/ 2 + 50);
+	ctx.fillText("Beta",game.screen.width / 2, game.screen.height / 2 + 50);
 	titleBlinker++;
 	if(titleBlinker < 30){
-		ctx.fillText("Click to Start!",screenWidth / 2, screenHeight/ 2 + 100);
+		ctx.fillText("Click to Start!",game.screen.width / 2, game.screen.height / 2 + 100);
 	} else if(titleBlinker > 60){
 		titleBlinker = 0;
 	};
 	
 };
 var overScreen = function(){
-	var ctx = context;
+	var ctx = game.context;
 	//Draw Image of Forever Alone
-	ctx.drawImage(image.foreverAloneGameOver,0,screenHeight- image.foreverAloneGameOver.height);
+	ctx.drawImage(image.foreverAloneGameOver,0,game.screen.height - image.foreverAloneGameOver.height);
 	var message = "Game Over!";
 	ctx.font = "40pt Arial";
 	ctx.textAlign = "center";
 	color.select(color.white);//Fixes a bug when you adjust the window the message disappears.
-	ctx.fillText(message, screenWidth / 2, screenHeight/ 2);
+	ctx.fillText(message, game.screen.width / 2, game.screen.height / 2);
 	ctx.font = "15pt Arial";
 	titleBlinker++;
 	if(titleBlinker < 30){
-		ctx.fillText("Click to continue...", screenWidth / 2, screenHeight/ 2 + 100);
+		ctx.fillText("Click to continue...", game.screen.width / 2, game.screen.height / 2 + 100);
 	} else if(titleBlinker > 60){
 		titleBlinker = 0;
 	}
@@ -426,13 +398,13 @@ var reset = function(){
 	score = 0;
 	ball.reset();
 };
-game.drawMode = function(){
-	var ctx = context;
+var drawMode = function(){
+	var ctx = game.context;
 	ctx.fillSyle = color.white;
 	if(siezureMode){
-		ctx.fillText("S - Siezure Mode On", screenWidth - 20, 70);
+		ctx.fillText("S - Siezure Mode On", game.screen.width - 20, 70);
 	} else {
-	 	ctx.fillText("S - Siezure Mode Off", screenWidth - 20, 70);
+	 	ctx.fillText("S - Siezure Mode Off", game.screen.width - 20, 70);
 	}
 };
 
@@ -442,7 +414,7 @@ var log = function(message){
 };
 var color = new Object();
 color.select = function(color){
-	context.fillStyle = color;
+	game.context.fillStyle = color;
 };
 color.white = "#ffffff";
 color.red = 0;
@@ -453,18 +425,18 @@ color.change = 30;
 
 var draw = new Object();
 draw.circle = function(centerX,centerY,radius){
-	var ctx = context;
+	var ctx = game.context;
 	ctx.beginPath();
 	ctx.arc(centerX,centerY,radius,0,2 * Math.PI, false);
 	ctx.fill();
 	ctx.closePath();
 };
 //Listeners
-window.onresize = screenAdjust;
 window.onmousemove = bar.move;
 window.onclick = click;
 window.onkeydown = keyboard;
 
 load();
 
-window.setInterval(tick, 17);
+//Start game loop
+game.loop(tick);
