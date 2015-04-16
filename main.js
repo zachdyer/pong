@@ -1,5 +1,7 @@
 function Main() {
+
 	var version = "1.1.0";
+
 	//Update the title to current version
 	document.title = "Pong - Forever Alone Edition - Version " + version;
 
@@ -196,21 +198,17 @@ function Main() {
 		}
 	};
 	ball.hitBar = function(){
-		for(var i = ball.x; i < ball.x + ball.speed; i++) {
-			for(var j = ball.y; j < ball.y + ball.speed, j++) {
-				if(ball.x > bar.x && ball.x < bar.x + bar.width && ball.y > bar.y - ball.size && ball.y < bar.y + bar.height){
-					ball.speed += ball.speedIncrementer;
-					if(siezureMode)
-						screenFlash();
-					if(sound.muted === false){
-						sound.bounce.load();
-						sound.bounce.play();
-					}
-					return true;
-				} else {
-					return false;
-				}
+		if(ball.x > bar.x && ball.x < bar.x + bar.width && ball.y > bar.y - ball.size && ball.y < bar.y + bar.height){
+			ball.speed += ball.speedIncrementer;
+			if(siezureMode)
+				screenFlash();
+			if(sound.muted === false){
+				sound.bounce.load();
+				sound.bounce.play();
 			}
+			return true;
+		} else {
+			return false;
 		}
 	};
 	ball.reset = function(){
