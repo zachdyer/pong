@@ -8,7 +8,7 @@ Press any button to start. Press the left mouse button to launch the ball. Move 
 - Author: Zach Dyer
 - Contributors: unknwnc
 - Website: ZachDyerDesign.com
-- Version: 1.1.0
+- Version: 1.2.0
 
 
 ## Demo game
