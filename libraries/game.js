@@ -1,32 +1,43 @@
 function Game(canvasID) {
-	//Take out body spacing
+	//Take out body spacing and silly side bars
 	document.body.style.margin = 0;
 	document.body.style.padding = 0;
+	document.body.style.overflow = "hidden";
 	
-	var canvasElement = document.getElementById(canvasID);
+	//Can't use the this keyword in functions unless I save it in a variable and I have no idea why
+	var self = this;
+	
+	this.canvasElement = document.getElementById(canvasID);
+	
+	this.screen = {};
+	this.screen.width = window.innerWidth;
+	this.screen.height = window.innerHeight;
 	
 	//Canvas full screen with black background
-	canvasElement.width = window.innerWidth;
-	canvasElement.height = window.innerHeight;
-	canvasElement.style.backgroundColor = "black";
+	this.canvasElement.width = this.screen.width;
+	this.canvasElement.height = this.screen.height;
+	this.canvasElement.style.backgroundColor = "black";
 	
 	//Canvas size updates when window size changes
 	window.onresize = function() {
-		canvasElement.width = window.innerWidth;
-		canvasElement.height = window.innerHeight;
+		self.screen.width = window.innerWidth;
+		self.screen.height = window.innerHeight;
+		self.canvasElement.width = self.screen.width;
+		self.canvasElement.height = self.screen.height;
 	};
 	
-	this.canvas = canvasElement.getContext("2d");
+	this.context = this.canvasElement.getContext("2d");
 	
 	//Total frames per second
 	this.fps = 0;
 	var currentTime = new Number();
 	var lastTime = new Number();
 	
-	//Can't use the this keyword in this.functions unless I save it in a variable
-	var self = this;
-
 	var interval;
+	
+	var clearScreen = function(){
+		self.context.clearRect(0, 0, self.screen.width, self.screen.height);
+	};
 	
 	var getFPS = function(currentTime, lastTime) {
 		var fps = 1000 / (currentTime - lastTime);
@@ -37,13 +48,14 @@ function Game(canvasID) {
 		currentTime = Date.now();
 		self.fps = getFPS(currentTime, lastTime);
 		lastTime = currentTime;
+		clearScreen();
 		custom();
 	};
 	
 	this.loop = function (custom) {
 	interval = setInterval(function(){
 		step(custom);
-		},17);
+		},16);
 	};
 	
 }
