@@ -3,6 +3,15 @@ function Game(canvasID) {
 	document.body.style.margin = 0;
 	document.body.style.padding = 0;
 	document.body.style.overflow = "hidden";
+	document.body.style.cursor = "none";
+	
+	this.cursor = function(bool, type) {
+		if(bool) {
+			document.body.style.cursor = type;
+		} else {
+			document.body.style.cursor = "none";
+		}
+	}
 	
 	//Can't use the this keyword in functions unless I save it in a variable and I have no idea why
 	var self = this;
