@@ -334,10 +334,12 @@ var click = function(){
 		play = true;
 	} else if(play){
 		if(ball.launched === false){
-			if(sound.muted === false)
+			if(sound.muted === false) {
 				sound.rayGun.play();
+			}
 			ball.launch();
 		}
+		bar.x = e.clientX;
 	} else if(over){
 		title = true;
 		over = false;
@@ -452,7 +454,7 @@ draw.circle = function(centerX,centerY,radius){
 
 //Listeners
 window.onmousemove = bar.move;
-window.onclick = click;
+window.onmousedown = click;
 window.onkeydown = keyboard;
 
 load();
