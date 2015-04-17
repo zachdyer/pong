@@ -41,15 +41,15 @@ var screenLoading = function(){
 var ball = new Object();
 ball.size = 10;
 ball.speed = 0;
-ball.speedIncrementer = 0.5;
+ball.speedIncrementer = 1;
 ball.x = game.screen.width / 2;
 ball.y = game.screen.height *.67 - ball.size;
 ball.speedX = ball.speed;
 ball.speedY = ball.speed;
 ball.launched = false;
-ball.launch = function(){
+ball.launch = function() {
 	ball.launched = true;
-	ball.speed = 3;
+	ball.speed = 100;
 	ball.speedX = ball.speed;
 	ball.speedY = -ball.speed;
 }
@@ -75,8 +75,8 @@ ball.update = function(){
 			ball.speedY = -ball.speed;
 			score++;
 		}
-		ball.x += ball.speedX;
-		ball.y += ball.speedY;
+		ball.x += game.speedPerSecond(ball.speedX);
+		ball.y += game.speedPerSecond(ball.speedY);
 	} else {
 		ball.x = bar.x + bar.width / 2;
 		ball.y = game.screen.height *.67 - ball.size;
@@ -196,7 +196,7 @@ ball.hitLeftSide = function(){
 	}
 };
 ball.hitBar = function(){
-	if(line_intersects(ball.x, ball.y, ball.x + ball.speed, ball.y + ball.speed, bar.x, bar.y, bar.x + bar.width, bar.y)) {
+	if(line_intersects(ball.x, ball.y, ball.x + game.speedPerSecond(ball.speed), ball.y + game.speedPerSecond(ball.speed), bar.x, bar.y, bar.x + bar.width, bar.y)) {
 			ball.speed += ball.speedIncrementer;
 			if(siezureMode)
 				screenFlash();
@@ -315,6 +315,8 @@ var drawScore = function() {
 	ctx.fillText("Score: " + score, 20, 50);
 	ctx.fillText("High Score: " + highScore, 20, 70);
 	ctx.fillText("FPS: " + game.fps, 20, 90);
+	ctx.fillText("ball.speed: " + ball.speed, 20, 110);
+	ctx.fillText("game.timePerTick: " + game.timePerTick, 20, 130);
 };
 var drawVersion = function() {
 	var ctx = game.context;

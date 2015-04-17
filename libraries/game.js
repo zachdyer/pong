@@ -13,7 +13,7 @@ function Game(canvasID) {
 		}
 	}
 	
-	//Can't use the this keyword in functions unless I save it in a variable and I have no idea why
+	//Importing the Game object for function use
 	var self = this;
 	
 	this.canvasElement = document.getElementById(canvasID);
@@ -51,6 +51,7 @@ function Game(canvasID) {
 	fps.currentTime = new Number();
 	fps.lastTime = 0;
 	fps.updateTime = Date.now();
+	this.timePerTick = 0;
 	fps.get = function(currentTime, lastTime) {
 		var fps = 1000 / (currentTime - lastTime);
 		return fps.toFixed();
@@ -61,7 +62,12 @@ function Game(canvasID) {
 			self.fps = fps.get(fps.currentTime, fps.lastTime);
 			fps.updateTime = fps.currentTime;
 		}
+		self.timePerTick = fps.currentTime - fps.lastTime;
 		fps.lastTime = fps.currentTime;
+	};
+	
+	this.speedPerSecond = function(speed) {
+		return speed / self.timePerTick;
 	};
 	
 	var step = function(custom){
