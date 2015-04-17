@@ -314,6 +314,7 @@ var drawScore = function() {
 	ctx.textAlign = "left";
 	ctx.fillText("Score: " + score, 20, 50);
 	ctx.fillText("High Score: " + highScore, 20, 70);
+	ctx.fillText("FPS: " + game.fps, 20, 90);
 };
 var drawVersion = function() {
 	var ctx = game.context;

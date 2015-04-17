@@ -37,26 +37,35 @@ function Game(canvasID) {
 	
 	this.context = this.canvasElement.getContext("2d");
 	
-	//Total frames per second
-	this.fps = 0;
-	var currentTime = new Number();
-	var lastTime = new Number();
-	
 	var interval;
 	
 	var clearScreen = function(){
 		self.context.clearRect(0, 0, self.screen.width, self.screen.height);
 	};
 	
-	var getFPS = function(currentTime, lastTime) {
+	//Export FPS
+	this.fps = 0;
+	
+	//FPS Stuff
+	var fps = {};
+	fps.currentTime = new Number();
+	fps.lastTime = 0;
+	fps.updateTime = Date.now();
+	fps.get = function(currentTime, lastTime) {
 		var fps = 1000 / (currentTime - lastTime);
 		return fps.toFixed();
 	};
+	fps.update = function() {
+		fps.currentTime = Date.now();
+		if(fps.currentTime - fps.updateTime >= 1000) {
+			self.fps = fps.get(fps.currentTime, fps.lastTime);
+			fps.updateTime = fps.currentTime;
+		}
+		fps.lastTime = fps.currentTime;
+	};
 	
 	var step = function(custom){
-		currentTime = Date.now();
-		self.fps = getFPS(currentTime, lastTime);
-		lastTime = currentTime;
+		fps.update();
 		clearScreen();
 		custom();
 	};
