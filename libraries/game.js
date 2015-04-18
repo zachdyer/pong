@@ -77,9 +77,14 @@ function Game(canvasID) {
 	};
 	
 	this.loop = function (custom) {
-	interval = setInterval(function(){
+// 	interval = setInterval(function(){
+// 		step(custom);
+// 		},16);
+	requestAnimationFrame(function(){
 		step(custom);
-		},16);
-	};
+		game.loop(custom);
+	})
+ 	};
+	
 	
 }
