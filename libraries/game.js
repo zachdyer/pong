@@ -5,7 +5,6 @@ function Game(canvasID) {
 	document.body.style.overflow = "hidden";
 	document.body.style.cursor = "none";
 	
-	//Change cursor type
 	this.cursor = function(bool, type) {
 		if(bool) {
 			document.body.style.cursor = type;
