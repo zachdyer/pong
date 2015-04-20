@@ -5,6 +5,7 @@ function Game(canvasID) {
 	document.body.style.overflow = "hidden";
 	document.body.style.cursor = "none";
 	
+	//Allows you to set the cursor type or turn it off
 	this.cursor = function(bool, type) {
 		if(bool) {
 			document.body.style.cursor = type;
@@ -36,8 +37,6 @@ function Game(canvasID) {
 	};
 	
 	this.context = this.canvasElement.getContext("2d");
-	
-	var interval;
 	
 	var clearScreen = function(){
 		self.context.clearRect(0, 0, self.screen.width, self.screen.height);
@@ -77,7 +76,7 @@ function Game(canvasID) {
 	};
 	
 	this.loop = function (custom) {
-	interval = setInterval(function(){
+	window.setInterval(function(){
 		step(custom);
 		},16);
 	};
