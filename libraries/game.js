@@ -69,16 +69,13 @@ function Game(canvasID) {
 		return speed / self.timePerTick;
 	};
 	
-	var step = function(custom){
-		fps.update();
-		clearScreen();
-		custom();
-	};
-	
-	this.loop = function (custom) {
-	window.setInterval(function(){
-		step(custom);
-		},16);
+	this.loop = function(tick) {
+		requestAnimationFrame(function() {
+			fps.update();
+			clearScreen();
+			tick();
+			self.loop(tick);
+		});
 	};
 	
 }
