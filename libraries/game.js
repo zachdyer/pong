@@ -42,17 +42,17 @@ function Game(canvasID) {
 
 	//FPS Stuff
 	this.fps = new Object;
-	this.fps.currentTime = new Number();
-	this.fps.lastTime = 0;
-	this.timePerTick = 0;
+	var currentTime = 0;
+	var lastTime = 0;
+	this.fps.timePerTick = 0;
 	this.fps.update = function() {
-		self.fps.currentTime = Date.now();
-		self.timePerTick = self.fps.currentTime - self.fps.lastTime;
-		self.fps.current = (1000 / self.timePerTick).toFixed();
-		self.fps.lastTime = self.fps.currentTime;
+		currentTime = Date.now();
+		self.fps.timePerTick = currentTime - lastTime;
+		self.fps.current = (1000 / self.fps.timePerTick).toFixed();
+		lastTime = currentTime;
 	};
 	this.speedPerSecond = function(speed) {
-		return speed / self.timePerTick;
+		return speed / self.fps.timePerTick;
 	};
 	
 	this.loop = function (custom){
