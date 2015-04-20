@@ -331,7 +331,7 @@ var update = function(){
 		ball.update();
 	}
 };
-var click = function(){
+var click = function(e){
 	if(title){
 		title = false;
 		play = true;
@@ -363,6 +363,7 @@ var keyboard = function(evt){
 			break;
 	}
 };
+
 var tick = function(){
 	screenDraw();
 	update();
