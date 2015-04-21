@@ -19,63 +19,48 @@ function Game(canvasID) {
 	
 	this.canvasElement = document.getElementById(canvasID);
 	
-	this.screen = {};
-	this.screen.width = window.innerWidth;
-	this.screen.height = window.innerHeight;
-	
-	//Canvas full screen with black background
-	this.canvasElement.width = this.screen.width;
-	this.canvasElement.height = this.screen.height;
-	this.canvasElement.style.backgroundColor = "black";
-	
-	//Canvas size updates when window size changes
-	window.onresize = function() {
+	this.screen = new Object;
+	this.screen.adjust=function (){
 		self.screen.width = window.innerWidth;
 		self.screen.height = window.innerHeight;
+		console.log(self.screen.height)
 		self.canvasElement.width = self.screen.width;
 		self.canvasElement.height = self.screen.height;
-	};
+	}
+
+	this.canvasElement.style.backgroundColor = "black";
+
+	//Canvas size updates when window size changes
+	window.onresize = function(){self.screen.adjust()};
+	this.screen.adjust();
 	
 	this.context = this.canvasElement.getContext("2d");
 	
-	var clearScreen = function(){
+	this.clearScreen = function(){
 		self.context.clearRect(0, 0, self.screen.width, self.screen.height);
 	};
-	
-	//Export FPS
-	this.fps = 0;
-	
+
 	//FPS Stuff
-	var fps = {};
-	fps.currentTime = new Number();
-	fps.lastTime = 0;
-	fps.updateTime = Date.now();
-	this.timePerTick = 0;
-	fps.get = function(currentTime, lastTime) {
-		var fps = 1000 / (currentTime - lastTime);
-		return fps.toFixed();
+	this.fps = new Object;
+	var currentTime = 0;
+	var lastTime = 0;
+	this.fps.timePerTick = 0;
+	this.fps.update = function() {
+		currentTime = Date.now();
+		self.fps.timePerTick = currentTime - lastTime;
+		self.fps.current = (1000 / self.fps.timePerTick).toFixed();
+		lastTime = currentTime;
 	};
-	fps.update = function() {
-		fps.currentTime = Date.now();
-		if(fps.currentTime - fps.updateTime >= 1000) {
-			self.fps = fps.get(fps.currentTime, fps.lastTime);
-			fps.updateTime = fps.currentTime;
-		}
-		self.timePerTick = fps.currentTime - fps.lastTime;
-		fps.lastTime = fps.currentTime;
-	};
-	
 	this.speedPerSecond = function(speed) {
-		return speed / self.timePerTick;
+		return speed / self.fps.timePerTick;
 	};
 	
-	this.loop = function(tick) {
-		requestAnimationFrame(function() {
-			fps.update();
-			clearScreen();
-			tick();
-			self.loop(tick);
-		});
-	};
-	
+	this.loop = function (custom){
+		requestAnimationFrame(function(){
+			self.fps.update();
+			self.clearScreen();
+			custom();
+			self.loop(custom);
+		})
+ 	};
 }
