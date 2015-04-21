@@ -47,7 +47,7 @@ function Game(canvasID) {
 	fps.currentTime = new Number();
 	fps.lastTime = 0;
 	fps.timePerTick = 17;
-	fps.updateTime = Date.now();
+	fps.updateTime = Date.now(); //This sets a time stamp every second to update the Game.fps
 	fps.get = function(currentTime, lastTime) {
 		var fps = 1000 / (currentTime - lastTime);
 		return fps.toFixed();

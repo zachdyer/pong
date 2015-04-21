@@ -75,9 +75,10 @@ ball.update = function(){
 			ball.speedY = -ball.speed;
 			score++;
 		}
+		//Update ball position
 		ball.x += game.speedPerSecond(ball.speedX);
 		ball.y += game.speedPerSecond(ball.speedY);
-	} else {
+	} else { //When ball is on the paddle
 		ball.x = bar.x + bar.width / 2;
 		ball.y = game.screen.height *.67 - ball.size;
 	}
@@ -208,6 +209,7 @@ ball.hitBar = function(){
 		} 
 	}
 
+//Really complicated stuff I don't understand but I know it works.
 function line_intersects(p0_x, p0_y, p1_x, p1_y, p2_x, p2_y, p3_x, p3_y) {
 
 	var s1_x, s1_y, s2_x, s2_y;
@@ -336,7 +338,7 @@ var update = function(){
 		ball.update();
 	}
 };
-var click = function(e){
+var click = function(evt){
 	if(title){
 		title = false;
 		play = true;
@@ -347,7 +349,8 @@ var click = function(e){
 			}
 			ball.launch();
 		}
-		bar.x = e.clientX;
+		//Touch response
+		bar.x = evt.clientX - bar.width / 2 || evt.pageX - bar.width / 2;
 	} else if(over){
 		title = true;
 		over = false;
@@ -382,11 +385,7 @@ var titleBlinker = 0;
 var titleScreen = function(){
 	var ctx = game.context;
 	//Draw Image of Forever Alone
-	if(mobile) {
-		ctx.drawImage(image.foreverAlone,0,game.screen.height - image.foreverAlone.height / 3, image.foreverAlone.width / 3, image.foreverAlone.height / 3);
-	} else {
-		ctx.drawImage(image.foreverAlone,0,game.screen.height - image.foreverAlone.height);
-	}
+	drawImage(image.foreverAlone);
 	ctx.textAlign = "center";
 	color.select(color.white);
 	if(mobile) {
@@ -421,7 +420,7 @@ var titleScreen = function(){
 var overScreen = function(){
 	var ctx = game.context;
 	//Draw Image of Forever Alone
-	ctx.drawImage(image.foreverAloneGameOver, 0, game.screen.height - image.foreverAloneGameOver.height);
+	drawImage(image.foreverAloneGameOver);
 	var message = "Game Over!";
 	ctx.font = "40pt Arial";
 	ctx.textAlign = "center";
@@ -454,6 +453,13 @@ var drawMode = function(){
 		ctx.fillText("S - Siezure Mode On", game.screen.width - 20, 70);
 	} else {
 		ctx.fillText("S - Siezure Mode Off", game.screen.width - 20, 70);
+	}
+};
+var drawImage = function(image) {
+	if(mobile) {
+		game.context.drawImage(image, 0, game.screen.height - image.height / 3, image.width / 3, image.height / 3);
+	} else {
+		game.context.drawImage(image, 0, game.screen.height - image.height);
 	}
 };
 
