@@ -36,7 +36,7 @@ function Game(canvasID) {
 	
 	this.context = this.canvasElement.getContext("2d");
 	
-	this.clearScreen = function(){
+	var clearScreen = function(){
 		self.context.clearRect(0, 0, self.screen.width, self.screen.height);
 	};
 
@@ -44,21 +44,23 @@ function Game(canvasID) {
 	this.fps = new Object;
 	var currentTime = 0;
 	var lastTime = 0;
+	this.fps = new Object();
 	this.fps.timePerTick = 0;
-	this.fps.update = function() {
+	fps.update = function() {
 		currentTime = Date.now();
 		self.fps.timePerTick = currentTime - lastTime;
 		self.fps.current = (1000 / self.fps.timePerTick).toFixed();
 		lastTime = currentTime;
 	};
+	
 	this.speedPerSecond = function(speed) {
 		return speed / self.fps.timePerTick;
 	};
 	
 	this.loop = function (custom){
 		requestAnimationFrame(function(){
-			self.fps.update();
-			self.clearScreen();
+			fps.update();
+			clearScreen();
 			custom();
 			self.loop(custom);
 		})
