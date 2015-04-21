@@ -46,6 +46,7 @@ function Game(canvasID) {
 	var fps = {};
 	fps.currentTime = new Number();
 	fps.lastTime = 0;
+	fps.timePerTick = 17;
 	fps.updateTime = Date.now();
 	fps.get = function(currentTime, lastTime) {
 		var fps = 1000 / (currentTime - lastTime);
@@ -57,12 +58,13 @@ function Game(canvasID) {
 			self.fps = fps.get(fps.currentTime, fps.lastTime);
 			fps.updateTime = fps.currentTime;
 		}
+		fps.timePerTick = fps.currentTime - fps.lastTime;
 		fps.lastTime = fps.currentTime;
 		
 	};
 	
 	this.speedPerSecond = function(speed) {
-		return speed / self.fps.timePerTick;
+		return speed / fps.timePerTick;
 	};
 	
 	this.loop = function (custom){
