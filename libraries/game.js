@@ -23,7 +23,6 @@ function Game(canvasID) {
 	this.screen.adjust=function (){
 		self.screen.width = window.innerWidth;
 		self.screen.height = window.innerHeight;
-		console.log(self.screen.height)
 		self.canvasElement.width = self.screen.width;
 		self.canvasElement.height = self.screen.height;
 	}
@@ -40,17 +39,26 @@ function Game(canvasID) {
 		self.context.clearRect(0, 0, self.screen.width, self.screen.height);
 	};
 
-	//FPS Stuff
-	this.fps = new Object;
-	var currentTime = 0;
-	var lastTime = 0;
-	this.fps = new Object();
-	this.fps.timePerTick = 0;
+	//Export FPS
+	this.fps = 0;
+	
+	//FPS Private stuff
+	var fps = {};
+	fps.currentTime = new Number();
+	fps.lastTime = 0;
+	fps.updateTime = Date.now();
+	fps.get = function(currentTime, lastTime) {
+		var fps = 1000 / (currentTime - lastTime);
+		return fps.toFixed();
+	};
 	fps.update = function() {
-		currentTime = Date.now();
-		self.fps.timePerTick = currentTime - lastTime;
-		self.fps.current = (1000 / self.fps.timePerTick).toFixed();
-		lastTime = currentTime;
+		fps.currentTime = Date.now();
+		if(fps.currentTime - fps.updateTime >= 1000) {
+			self.fps = fps.get(fps.currentTime, fps.lastTime);
+			fps.updateTime = fps.currentTime;
+		}
+		fps.lastTime = fps.currentTime;
+		
 	};
 	
 	this.speedPerSecond = function(speed) {
