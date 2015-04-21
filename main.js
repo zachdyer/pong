@@ -491,7 +491,7 @@ draw.circle = function(centerX,centerY,radius){
 window.onmousemove = bar.move;
 window.onmousedown = click;
 window.onkeydown = keyboard;
-game.canvasElement.addEventListener('touchstart', click, false);
+game.canvasElement.addEventListener('touchmove', click, false);
 
 load();
 
