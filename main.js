@@ -21,7 +21,7 @@ var screenDraw = function(){
 		drawScore();
 	}
 	drawVersion();
-	if(image.loaded){
+	if(image.loaded && mobile === false){
 		sound.drawMute();
 		drawMode();
 	}
@@ -316,8 +316,10 @@ var drawScore = function() {
 	ctx.textAlign = "left";
 	ctx.fillText("Score: " + score, 20, 50);
 	ctx.fillText("High Score: " + highScore, 20, 70);
-	ctx.fillText("FPS: " + game.fps, 20, 90);
-	ctx.fillText("ball.speed: " + ball.speed, 20, 110);
+	if(mobile === false) {
+		ctx.fillText("FPS: " + game.fps, 20, 90);
+		ctx.fillText("ball.speed: " + ball.speed, 20, 110);
+	}
 };
 var drawVersion = function() {
 	var ctx = game.context;
@@ -357,6 +359,12 @@ var click = function(evt){
 		reset();
 	}
 };
+var drag = function(evt) {
+	if(play) {
+		//Touch response
+		bar.x = evt.clientX - bar.width / 2 || evt.pageX - bar.width / 2;
+	}
+};
 var keyboard = function(evt){
 	switch(evt.keyCode){
 		case 77:
@@ -382,7 +390,7 @@ var play = false;
 var over = false;
 var siezureMode = true;
 var titleBlinker = 0;
-var titleScreen = function(){
+var titleScreen = function() {
 	var ctx = game.context;
 	//Draw Image of Forever Alone
 	drawImage(image.foreverAlone);
@@ -492,7 +500,7 @@ window.onmousemove = bar.move;
 window.onmousedown = click;
 window.onkeydown = keyboard;
 game.canvasElement.addEventListener('touchstart', click, false);
-game.canvasElement.addEventListener('touchmove', click, false);
+game.canvasElement.addEventListener('touchmove', drag, false);
 
 load();
 
