@@ -324,9 +324,15 @@ var drawVersion = function() {
 	ctx.fillText("Version: " + version, game.screen.width - 20, game.screen.height  - 50);
 };
 var load = function() {
+	if(game.screen.width <= 480) {
+		mobile = true;
+	}
 	image.load();
 };
 var update = function(){
+	if(title && game.screen.width <= 480) {
+		image.foreverAlone.style.width = "100px";
+	}
 	if(play){
 		ball.update();
 	}
@@ -364,6 +370,7 @@ var keyboard = function(evt){
 	}
 };
 
+var mobile = false;
 var tick = function(){
 	screenDraw();
 	update();
@@ -376,14 +383,33 @@ var titleBlinker = 0;
 var titleScreen = function(){
 	var ctx = game.context;
 	//Draw Image of Forever Alone
-	ctx.drawImage(image.foreverAlone,0,game.screen.height - image.foreverAlone.height);
+	if(mobile) {
+		ctx.drawImage(image.foreverAlone,0,game.screen.height - image.foreverAlone.height / 3, image.foreverAlone.width / 3, image.foreverAlone.height / 3);
+	} else {
+		ctx.drawImage(image.foreverAlone,0,game.screen.height - image.foreverAlone.height);
+	}
 	ctx.textAlign = "center";
 	color.select(color.white);
-	ctx.font = "80pt Arial";
+	if(mobile) {
+		ctx.font = "40px Arial";
+	} else {
+		ctx.font = "80pt Arial";
+	}
+	
 	ctx.fillText("PONG",game.screen.width / 2, game.screen.height / 2 - 50);
-	ctx.font = "20pt Arial";
+	if(mobile){ 
+		ctx.font = "20px Arial"; 
+	} else { 	
+		ctx.font = "20pt Arial";
+	}
+	
 	ctx.fillText("Forever Alone Edition",game.screen.width / 2, game.screen.height / 2);
-	ctx.font = "15pt Arial";
+	if(mobile){ 
+		ctx.font = "10px Arial"; 
+	} else { 	
+		ctx.font = "15pt Arial"; 
+	}
+
 	ctx.fillText("Beta",game.screen.width / 2, game.screen.height / 2 + 50);
 	titleBlinker++;
 	if(titleBlinker < 30){
@@ -396,7 +422,7 @@ var titleScreen = function(){
 var overScreen = function(){
 	var ctx = game.context;
 	//Draw Image of Forever Alone
-	ctx.drawImage(image.foreverAloneGameOver,0,game.screen.height - image.foreverAloneGameOver.height);
+	ctx.drawImage(image.foreverAloneGameOver, 0, game.screen.height - image.foreverAloneGameOver.height);
 	var message = "Game Over!";
 	ctx.font = "40pt Arial";
 	ctx.textAlign = "center";
@@ -460,6 +486,7 @@ draw.circle = function(centerX,centerY,radius){
 window.onmousemove = bar.move;
 window.onmousedown = click;
 window.onkeydown = keyboard;
+game.canvasElement.addEventListener('touchstart', click, false);
 
 load();
 
