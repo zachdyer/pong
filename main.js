@@ -361,6 +361,7 @@ var click = function(evt){
 };
 var drag = function(evt) {
 	if(play) {
+		console.log(evt);
 		//Touch response
 		bar.x = evt.clientX - bar.width / 2 || evt.pageX - bar.width / 2;
 	}
