@@ -361,7 +361,8 @@ var click = function(evt){
 };
 var drag = function(evt) {
 	if(play) {
-		console.log(evt);
+		//Prevent game from freezing by disabling scrolling 
+		evt.preventDefault();
 		//Touch response
 		bar.x = evt.clientX - bar.width / 2 || evt.pageX - bar.width / 2;
 	}
