@@ -63,10 +63,12 @@ function Game(canvasID) {
 		
 	};
 	
+	//Other function
 	this.speedPerSecond = function(speed) {
 		return speed / fps.timePerTick;
 	};
 	
+	//This starts the main game loop
 	this.loop = function (custom){
 		requestAnimationFrame(function(){
 			fps.update();
