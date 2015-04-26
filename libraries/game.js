@@ -67,6 +67,33 @@ function Game(canvasID) {
 	this.speedPerSecond = function(speed) {
 		return speed / fps.timePerTick;
 	};
+
+	this.assets=new Object;
+	//Takes urls of assets in list, loads them, and stores them in game.assets object. 
+	this.assets.load=function(urls, callback){ 
+		for (var x=0;x<urls.length;x++){
+			//have url: "images/foreverAloneGameOver.gif"
+			//split on every slash: ["images", foreverAloneGameOver.gif"]
+			//get last item: "foreverAloneGameOver.gif"
+			//split on period: ["foreveralone	", "gif"]
+			//first item is filename. Last item is file type.
+			file=urls[x].split("/").pop().split(".");
+			fileName=file[0];
+			fileType=file.pop();
+			//load assets
+			console.log("Filename: "+fileName+". Filetype: "+fileType);
+			if (["gif", "png"].indexOf(fileType)!=-1){//If dealing with image
+				self.assets[fileName]=document.createElement("img");
+			}
+			if (["mp3"].indexOf(fileType)!=-1){//If dealing with sound
+				self.assets[fileName]=document.createElement("audio")
+			}
+			//If asset object has not been created, it must be unrecognized filetype.
+			if (!self.assets[fileName]){throw("Unknown Filetype")}
+			self.assets[fileName].src=urls[x];
+		}
+		callback();
+	}
 	
 	//This starts the main game loop
 	this.loop = function (custom){
