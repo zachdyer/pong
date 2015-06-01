@@ -1,10 +1,12 @@
-var version = "2.0.0";
+var version = "2.0.1";
 
 //Update the title to current version
 document.title = "Pong - Forever Alone Edition - Version " + version;
 
 //Using game library object
 var game = new Game('canvas');
+
+var config = game.config();
 
 var screenDraw = function(){
 	if(image.loaded === false){
@@ -206,7 +208,7 @@ ball.hitBar = function(){
 				sound.bounce.play();
 			}
 			return true;
-		} 
+		}
 	}
 
 //Really complicated stuff I don't understand but I know it works.
@@ -217,17 +219,17 @@ function line_intersects(p0_x, p0_y, p1_x, p1_y, p2_x, p2_y, p3_x, p3_y) {
 	s1_y = p1_y - p0_y;
 	s2_x = p3_x - p2_x;
 	s2_y = p3_y - p2_y;
- 
+
 	var s, t;
 	s = (-s1_y * (p0_x - p2_x) + s1_x * (p0_y - p2_y)) / (-s2_x * s1_y + s1_x * s2_y);
 	t = ( s2_x * (p0_y - p2_y) - s2_y * (p0_x - p2_x)) / (-s2_x * s1_y + s1_x * s2_y);
- 
+
 	if (s >= 0 && s <= 1 && t >= 0 && t <= 1)
 	{
 		// Collision detected
 		return 1;
 	}
- 
+
 	return 0; // No collision
 }
 ball.reset = function(){
@@ -293,7 +295,7 @@ image.foreverAloneGameOver = new Image();
 image.foreverAloneGameOver.src = "images/foreverAloneGameOver.gif";
 image.images = [
 	image.foreverAlone,
-	image.foreverAloneGameOver	
+	image.foreverAloneGameOver
 ];
 image.imageCount = 0;
 image.loaded = false;
@@ -352,7 +354,7 @@ var click = function(evt){
 			ball.launch();
 		}
 		//Touch response
-		bar.x = evt.clientX - bar.width / 2 || evt.pageX - bar.width / 2;
+		bar.x = evt.clientX || evt.pageX;
 	} else if(over){
 		title = true;
 		over = false;
@@ -361,7 +363,7 @@ var click = function(evt){
 };
 var drag = function(evt) {
 	if(play) {
-		//Prevent game from freezing by disabling scrolling 
+		//Prevent game from freezing by disabling scrolling
 		evt.preventDefault();
 		//Touch response
 		bar.x = evt.clientX - bar.width / 2 || evt.pageX - bar.width / 2;
@@ -403,19 +405,19 @@ var titleScreen = function() {
 	} else {
 		ctx.font = "80pt Arial";
 	}
-	
+
 	ctx.fillText("PONG",game.screen.width / 2, game.screen.height / 2 - 50);
-	if(mobile){ 
-		ctx.font = "20px Arial"; 
-	} else { 	
+	if(mobile){
+		ctx.font = "20px Arial";
+	} else {
 		ctx.font = "20pt Arial";
 	}
-	
+
 	ctx.fillText("Forever Alone Edition",game.screen.width / 2, game.screen.height / 2);
-	if(mobile){ 
-		ctx.font = "10px Arial"; 
-	} else { 	
-		ctx.font = "15pt Arial"; 
+	if(mobile){
+		ctx.font = "10px Arial";
+	} else {
+		ctx.font = "15pt Arial";
 	}
 
 	ctx.fillText("Beta",game.screen.width / 2, game.screen.height / 2 + 50);
@@ -425,7 +427,7 @@ var titleScreen = function() {
 	} else if(titleBlinker > 60){
 		titleBlinker = 0;
 	};
-	
+
 };
 var overScreen = function(){
 	var ctx = game.context;

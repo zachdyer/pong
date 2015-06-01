@@ -4,7 +4,7 @@ function Game(canvasID) {
 	document.body.style.padding = 0;
 	document.body.style.overflow = "hidden";
 	document.body.style.cursor = "none";
-	
+
 	//Allows you to set the cursor type or turn it off
 	this.cursor = function(bool, type) {
 		if(bool) {
@@ -13,12 +13,27 @@ function Game(canvasID) {
 			document.body.style.cursor = "none";
 		}
 	}
-	
+
+
 	//Importing the Game object for function use
 	var self = this;
-	
+
+	//Game.config() returns the json from the configuration file config.json
+	this.config = function() {
+		var xmlhttp = new XMLHttpRequest();
+		var url = "config.json";
+
+		xmlhttp.onreadystatechange = function() {
+		    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+		        return JSON.parse(xmlhttp.responseText);
+		    }
+		}
+		xmlhttp.open("GET", url, true);
+		xmlhttp.send();
+	}
+
 	this.canvasElement = document.getElementById(canvasID);
-	
+
 	this.screen = new Object;
 	this.screen.adjust=function (){
 		self.screen.width = window.innerWidth;
@@ -32,16 +47,16 @@ function Game(canvasID) {
 	//Canvas size updates when window size changes
 	window.onresize = function(){self.screen.adjust()};
 	this.screen.adjust();
-	
+
 	this.context = this.canvasElement.getContext("2d");
-	
+
 	var clearScreen = function(){
 		self.context.clearRect(0, 0, self.screen.width, self.screen.height);
 	};
 
 	//Export FPS
 	this.fps = 0;
-	
+
 	//FPS Private stuff
 	var fps = {};
 	fps.currentTime = new Number();
@@ -60,14 +75,14 @@ function Game(canvasID) {
 		}
 		fps.timePerTick = fps.currentTime - fps.lastTime;
 		fps.lastTime = fps.currentTime;
-		
+
 	};
-	
+
 	//Other function
 	this.speedPerSecond = function(speed) {
 		return speed / fps.timePerTick;
 	};
-	
+
 	//This starts the main game loop
 	this.loop = function (custom){
 		requestAnimationFrame(function(){
