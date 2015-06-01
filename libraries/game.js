@@ -25,7 +25,7 @@ function Game(canvasID) {
 
 		xmlhttp.onreadystatechange = function() {
 		    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-		        return JSON.parse(xmlhttp.responseText);
+		        self.config = JSON.parse(xmlhttp.responseText);
 		    }
 		}
 		xmlhttp.open("GET", url, true);
