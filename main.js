@@ -5,6 +5,7 @@ document.title = "Pong - Forever Alone Edition - Version " + version;
 
 //Using game library object
 var game = new Game('canvas');
+game.import("config.json");
 
 var config = game.config();
 
