@@ -69,6 +69,9 @@ function Game(canvasID) {
 	};
 
 	this.assets=new Object;
+	this.assets.queue=[]; //list of currently downloading assets
+	this.assets.loaded=[]; //list of previously loaded assets
+	this.assets.errors=[]; //list of assets that failed to load
 	//Takes urls of assets in list, loads them, and stores them in game.assets object. 
 	this.assets.load=function(urls, callback){ 
 		for (var x=0;x<urls.length;x++){
@@ -80,19 +83,46 @@ function Game(canvasID) {
 			file=urls[x].split("/").pop().split(".");
 			fileName=file[0];
 			fileType=file.pop();
-			//load assets
+			typeRecognized=false;
+			//create correct object for type of asset
 			console.log("Filename: "+fileName+". Filetype: "+fileType);
 			if (["gif", "png"].indexOf(fileType)!=-1){//If dealing with image
-				self.assets[fileName]=document.createElement("img");
+				item=document.createElement("img");
+				typeRecognized=true;
 			}
 			if (["mp3"].indexOf(fileType)!=-1){//If dealing with sound
-				self.assets[fileName]=document.createElement("audio")
+				item=document.createElement("audio")
+				typeRecognized=true;
 			}
-			//If asset object has not been created, it must be unrecognized filetype.
-			if (!self.assets[fileName]){throw("Unknown Filetype")}
-			self.assets[fileName].src=urls[x];
+			//If there is an unrecognized filetype.
+			if (!typeRecognized){
+				console.log("Unknown filetype: "+fileType);
+				self.assets.errors.push([urls[x], "Unknown filetype"]);
+				continue;
+			}
+			self.assets.queue.push(fileName);
+			item.fileName=fileName;
+			item.fileType=fileType;
+			//KNOWN ISSUE: Audio elements do not seem to use the load event.
+			//If audio is queued, neither the load nor the error listener is triggered.
+			//Is there an easy way to duplicate the action of the load listener, without duplicating the code?
+			item.addEventListener("load", function(){
+				//Loaded successfully
+				self.assets.loaded.push(this.fileName);
+				self.assets[this.fileName]=this;
+				//remove from queue, and check if queue is empty. Call callback if queue is empty.
+				//Yes, for now, this code is duplicated.
+				self.assets.queue.splice(self.assets.queue.indexOf(this.fileName), 1);
+				if (self.assets.queue.length==0){callback();};
+			}, false);
+			item.addEventListener("error", function(err){
+				//Error
+				self.assets.errors.push([this.fileName, err])
+				self.assets.queue.splice(self.assets.queue.indexOf(this.fileName), 1);
+				if (self.assets.queue.length==0){callback();};
+			}, false);
+			item.src=urls[x];
 		}
-		callback();
 	}
 	
 	//This starts the main game loop
